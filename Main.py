@@ -3,11 +3,31 @@ from Color import Color
 
 
 def main():
-    image = TGAImage(100, 100, Format.RGBA)
     color_red = Color(255, 0, 0, 255)
-    image.set(52, 41, color_red)
+    color_white = Color(255, 255, 255, 255)
+
+    image = TGAImage(100, 100, Format.RGBA)
+
+    #line(20, 13, 40, 80, image, color_white)
+    line(40, 80, 20, 13, image, color_red)
+
     image.write("output.tga")
 
+
+def line(x0, y0, x1, y1, image, color):
+    x0, x1 = swap_if_bigger(x0, x1)
+    y0, y1 = swap_if_bigger(y0, y1)
+    for x in range(x0, x1, 1):
+        t = (x - x0) / float(x1 - x0)
+        y = y0*(1 - t) + y1*t
+        image.set(int(x), int(y), color)
+
+
+def swap_if_bigger(s1, s2):
+    if s2 < s1:
+        return s2, s1
+    else:
+        return s1, s2
 
 # This is the standard boilerplate that calls the main() function.
 if __name__ == '__main__':
