@@ -19,10 +19,23 @@ class Model:
                 elif split[0] == "f":
                     a += 1
                     face = Vector()
-                    face.x = split[1].split("/")[0]
-                    face.y = split[2].split("/")[0]
-                    face.z = split[3].split("/")[0]
+                    face.x = int(split[1].split("/")[0]) - 1    # 1 - based format
+                    face.y = int(split[2].split("/")[0]) - 1
+                    face.z = int(split[3].split("/")[0]) - 1
                     self.faces.append(face)
 
         print "verts = %s   faces = %s" % (len(self.verts), len(self.faces))
         f.close()
+
+    def write(self, filename):
+        f = open(filename, "w")
+        for v in self.verts:
+            f.write('v ' + str(v.x) + '  ' + str(v.y) + '  ' + str(v.z) + '\n')
+        f.write('\n')
+        f.write("verts = %s " % (len(self.verts)))
+        f.write('\n')
+        for ff in self.faces:
+            f.write('f ' + str(ff.x) + '  ' + str(ff.y) + '  ' + str(ff.z) + '\n')
+        f.write("faces = %s " % (len(self.faces)))
+        f.close()
+

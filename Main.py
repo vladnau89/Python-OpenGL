@@ -2,31 +2,32 @@ from TGAImage import TGAImage, Format
 from Color import Color
 from Model import Model
 
-color_red = Color(255, 0, 0, 255)
-color_white = Color(255, 255, 255, 255)
+red = Color(255, 0, 0, 255)
+white = Color(255, 255, 255, 255)
 
-width = 800
-height = 800
+width = 700
+height = 700
 
 def main():
     model = Model("obj/african_head.obj")
-    image = TGAImage(width, height, Format.RGBA)
+    image = TGAImage(width + 1, height + 1, Format.RGBA)
+
+    model.write("test.txt")
 
     for face in model.faces:
-        for i in range(0, 3, 1):
+        for i in range(0, 3):
             v0 = model.verts[int(face.get(i))]
             v1 = model.verts[int(face.get((i + 1) % 3))]
-            x0 = (v0.x + 1.) * width/2.
+            x0 = (v0.x + 1.) * width / 2.
             y0 = (v0.y + 1.) * height/2.
             x1 = (v1.x + 1.) * width/2.
             y1 = (v1.y + 1.) * height/2.
-            line(int(x0), int(y0), int(x1), int(y1), image, color_red);
+            line(int(x0), int(y0), int(x1), int(y1), image, white)
 
-
-
-    #line(20, 13, 40, 80, image, color_white)
-    #line(40, 80, 20, 13, image, color_red)
-
+    #line(20, 13, 40, 80, image, red)
+    #line(0, 0, width, height, image, red)
+    #line(40, 80, 20, 13, image, red)
+    # image.flip_vertically()
     image.write("output.tga")
 
 
