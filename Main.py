@@ -37,11 +37,13 @@ def line(x0, y0, x1, y1, image, color):
         y1, x1 = x1, y1
         steep = True
 
-    x0, x1 = swap_if_bigger(x0, x1)
-    y0, y1 = swap_if_bigger(y0, y1)
+    if x0 > x1:
+        x0, x1 = x1, x0
+        y0, y1 = y1, y0
+
     for x in range(x0, x1, 1):
         t = (x - x0) / float(x1 - x0)
-        y = y0*(1 - t) + y1*t
+        y = y0 * (1 - t) + y1 * t
         if steep:
             image.set(int(y), int(x), color)
         else:
@@ -53,6 +55,7 @@ def swap_if_bigger(s1, s2):
         return s2, s1
     else:
         return s1, s2
+
 
 # This is the standard boilerplate that calls the main() function.
 if __name__ == '__main__':
