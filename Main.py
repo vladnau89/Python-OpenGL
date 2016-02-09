@@ -12,7 +12,7 @@ def main():
     model = Model("obj/african_head.obj")
     image = TGAImage(width + 1, height + 1, Format.RGBA)
 
-    model.write("test.txt")
+    #model.write("test.txt")
 
     for face in model.faces:
         for i in range(0, 3):
@@ -48,14 +48,6 @@ def line(x0, y0, x1, y1, image, color):
             image.set(int(y), int(x), color)
         else:
             image.set(int(x), int(y), color)
-
-
-def swap_if_bigger(s1, s2):
-    if s2 < s1:
-        return s2, s1
-    else:
-        return s1, s2
-
 
 # This is the standard boilerplate that calls the main() function.
 if __name__ == '__main__':
