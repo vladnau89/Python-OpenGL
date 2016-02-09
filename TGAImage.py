@@ -48,13 +48,4 @@ class TGAImage:
         self.__data[index + 2] = color.r()
         self.__data[index + 3] = color.a()
 
-    def flip_vertically(self):
-        bytes_per_line = self.width*self.format
-        half = self.height >> 1
-        for i in range(0, half):
-            l1 = i * bytes_per_line
-            l2 = (self.height - i - 1) * bytes_per_line
-            temp_arr = self.__data[l1:l1 + bytes_per_line]
-            self.__data[l1:l1 + bytes_per_line] = self.__data[l2:l2 + bytes_per_line]
-            self.__data[l2:l2 + bytes_per_line] = temp_arr
 

@@ -27,7 +27,6 @@ def main():
     #line(20, 13, 40, 80, image, red)
     #line(0, 0, width, height, image, red)
     #line(40, 80, 20, 13, image, red)
-    # image.flip_vertically()
     image.write("output.tga")
 
 
