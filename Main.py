@@ -8,6 +8,7 @@ white = Color(255, 255, 255, 255)
 width = 700
 height = 700
 
+
 def main():
     model = Model("obj/african_head.obj")
     image = TGAImage(width + 1, height + 1, Format.RGBA)
@@ -19,14 +20,14 @@ def main():
             v0 = model.verts[int(face.get(i))]
             v1 = model.verts[int(face.get((i + 1) % 3))]
             x0 = (v0.x + 1.) * width / 2.
-            y0 = (v0.y + 1.) * height/2.
-            x1 = (v1.x + 1.) * width/2.
-            y1 = (v1.y + 1.) * height/2.
+            y0 = (v0.y + 1.) * height / 2.
+            x1 = (v1.x + 1.) * width / 2.
+            y1 = (v1.y + 1.) * height / 2.
             line(int(x0), int(y0), int(x1), int(y1), image, white)
 
-    #line(20, 13, 40, 80, image, red)
-    #line(0, 0, width, height, image, red)
-    #line(40, 80, 20, 13, image, red)
+    # line(20, 13, 40, 80, image, red)
+    # line(0, 0, width, height, image, red)
+    # line(40, 80, 20, 13, image, red)
     # image.flip_vertically()
     image.write("output.tga")
 
@@ -38,11 +39,13 @@ def line(x0, y0, x1, y1, image, color):
         y1, x1 = x1, y1
         steep = True
 
-    x0, x1 = swap_if_bigger(x0, x1)
-    y0, y1 = swap_if_bigger(y0, y1)
+    if x0 > x1:
+        x0, x1 = x1, x0
+        y0, y1 = y1, y0
+
     for x in range(x0, x1, 1):
         t = (x - x0) / float(x1 - x0)
-        y = y0*(1 - t) + y1*t
+        y = y0 * (1 - t) + y1 * t
         if steep:
             image.set(int(y), int(x), color)
         else:
@@ -54,6 +57,7 @@ def swap_if_bigger(s1, s2):
         return s2, s1
     else:
         return s1, s2
+
 
 # This is the standard boilerplate that calls the main() function.
 if __name__ == '__main__':
