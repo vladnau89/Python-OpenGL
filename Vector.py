@@ -11,3 +11,24 @@ class Vector:
             return self.y
         if i == 2:
             return self.z
+
+    def __add__(self, other):
+        v = Vector(self.x, self.y, self.z)
+        v.x += other.x
+        v.y += other.y
+        v.z += other.z
+        return v
+
+    def __sub__(self, other):
+        v = Vector(self.x, self.y, self.z)
+        v.x -= other.x
+        v.y -= other.y
+        v.z -= other.z
+        return v
+
+    def __mul__(self, x):
+        v = Vector(self.x, self.y, self.z)
+        v.x *= x
+        v.y *= x
+        v.z *= x
+        return v
