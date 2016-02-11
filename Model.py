@@ -17,14 +17,15 @@ class Model:
                     vector = Vector(float(split[1]), float(split[2]), float(split[3]))
                     self.verts.append(vector)
                 elif split[0] == "f":
-                    a += 1
                     face = Vector()
                     face.x = int(split[1].split("/")[0]) - 1    # 1 - based format
                     face.y = int(split[2].split("/")[0]) - 1
                     face.z = int(split[3].split("/")[0]) - 1
                     self.faces.append(face)
-
-        print "verts = %s   faces = %s" % (len(self.verts), len(self.faces))
+                elif split[0] == "vn":
+                     a += 1
+        print "vn = ", a
+        print "verts = %s   faces = %s   normals = %s" % (len(self.verts), len(self.faces), a)
         f.close()
 
     def write(self, filename):
