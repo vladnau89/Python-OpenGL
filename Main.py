@@ -48,11 +48,11 @@ def triangle(v1, v2, v3, image, color):
     if v1.y > v2.y:
         v1, v2 = v2, v1
 
-    if v2.y > v3.y:
-        v2, v3 = v3, v2
-
     if v1.y > v3.y:
         v1, v3 = v3, v1
+
+    if v2.y > v3.y:
+        v2, v3 = v3, v2
 
     total_height = int(v3.y - v1.y)
 
