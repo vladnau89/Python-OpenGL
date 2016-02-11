@@ -12,7 +12,7 @@ white = Color(255, 255, 255, 255)
 width = 700
 height = 700
 
-light_intensity_vector = Vector(0, 0, -1)
+light_intensity_vector = Vector(0, 0, -0.7)
 
 
 def main():
