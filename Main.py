@@ -3,6 +3,7 @@ from Color import Color
 from Model import Model
 from Vector import Vector
 from random import randint
+from math import fabs
 
 red = Color(255, 0, 0, 255)
 green = Color(0, 255, 0, 255)
@@ -11,23 +12,35 @@ white = Color(255, 255, 255, 255)
 width = 700
 height = 700
 
+light_intensity_vector = Vector(0, 0, -1)
+
+
 def main():
     model = Model("obj/african_head.obj")
     image = TGAImage(width + 1, height + 1, Format.RGBA)
 
-    #model.write("test.txt")
+    # model.write("test.txt")
 
     for face in model.faces:
-        screen_coord =[Vector(), Vector(), Vector()]
+        screen_coord = [Vector(), Vector(), Vector()]
+        world_coords = [Vector(), Vector(), Vector()]
         for i in range(0, 3):
             world_coord_vector = model.verts[int(face.get(i))]
-            screen_coord[i].x = int((world_coord_vector.x + 1.)*width/2)
-            screen_coord[i].y = int((world_coord_vector.y + 1.)*height/2)
-        random_color = Color(randint(0, 255), randint(0, 255), randint(0, 255), 255)
+            screen_coord[i].x = int((world_coord_vector.x + 1.) * width / 2)
+            screen_coord[i].y = int((world_coord_vector.y + 1.) * height / 2)
+            world_coords[i] = world_coord_vector
+        n = (world_coords[2] - world_coords[0]) ^ (world_coords[1] - world_coords[0])
+        norm = n.normalize()
+        intensity = norm.mul(light_intensity_vector)
+        if intensity < 0:   # skip invisible triangle
+            continue
+
+        # random_color = Color(randint(0, 255), randint(0, 255), randint(0, 255), 255)
+        random_color = Color(int(intensity * 255), int(intensity * 255), int(intensity * 255), 255)
         triangle(screen_coord[0], screen_coord[1], screen_coord[2], image, random_color)
-    #line(20, 13, 40, 80, image, red)
-    #line(0, 0, width, height, image, red)
-    #line(40, 80, 20, 13, image, red)
+    # line(20, 13, 40, 80, image, red)
+    # line(0, 0, width, height, image, red)
+    # line(40, 80, 20, 13, image, red)
     #
     # t0 = [Vector(10, 70), Vector(50, 160), Vector(70, 80)]
     # t1 = [Vector(180, 50), Vector(150, 1), Vector(70, 180)]
@@ -61,7 +74,7 @@ def triangle(v1, v2, v3, image, color):
         segment_height = v3.y - v2.y if is_second_half else v2.y - v1.y
         alpha = float(y) / total_height
         delta = (v2.y - v1.y) if is_second_half else 0
-        beta  = float(y - delta) / segment_height
+        beta = float(y - delta) / segment_height
         a = v1 + (v3 - v1) * alpha
         b = v2 + (v3 - v2) * beta if is_second_half else v1 + (v2 - v1) * beta
 
@@ -94,6 +107,7 @@ def line(x0, y0, x1, y1, image, color):
             image.set(int(y), int(x), color)
         else:
             image.set(int(x), int(y), color)
+
 
 # This is the standard boilerplate that calls the main() function.
 if __name__ == '__main__':
