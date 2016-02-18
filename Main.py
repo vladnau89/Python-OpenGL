@@ -21,7 +21,7 @@ def main():
     model = Model("obj/african_head.obj")
     image = TGAImage(width + 1, height + 1, Format.RGBA)
 
-    # model.write("test.txt")
+    # model.write("info.txt")
     zbuffer = []
 
     for i in range(0, image.width * image.height):
