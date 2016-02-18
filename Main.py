@@ -70,11 +70,11 @@ def rasterise(point_vect0, point_vect1, image, color, ybuffer):
         p0, p1 = p1, p0
 
     for x in range(p0.x, p1.x, 1):
-        t = (x - p0.x)/ float(p1.x - p0.x)
+        t = (x - p0.x) / float(p1.x - p0.x)
         y = p0.y * (1 - t) + p1.y * t
         if ybuffer[x] < y:
             ybuffer[x] = y
-            for i in range(0, 16):
+            for i in range(0, image.height):
                 image.set(x, i, color)
 
 
