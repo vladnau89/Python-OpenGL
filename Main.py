@@ -18,33 +18,37 @@ light_intensity_vector = Vector(0, 0, -0.7)
 
 
 def main():
-    model = Model("obj/african_head.obj")
-    image = TGAImage(width + 1, height + 1, Format.RGBA)
 
-    # model.write("info.txt")
-    zbuffer = []
+    image = TGAImage()
+    image.read("obj/african_head_diffuse.tga")
 
-    for i in range(0, image.width * image.height):
-        zbuffer.append(-sys.maxint - 1)
-
-    for face in model.faces:
-        screen_coord = [Vector(), Vector(), Vector()]
-        world_coords = [Vector(), Vector(), Vector()]
-        for i in range(0, 3):
-            world_coord_vector = model.verts[int(face.get(i))]
-            screen_coord[i].x = int((world_coord_vector.x + 1.) * width / 2)
-            screen_coord[i].y = int((world_coord_vector.y + 1.) * height / 2)
-            world_coords[i] = world_coord_vector
-        n = (world_coords[2] - world_coords[0]) ^ (world_coords[1] - world_coords[0])
-        norm = n.normalize()
-        intensity = norm.mul(light_intensity_vector)
-        if intensity < 0:  # skip invisible triangle
-            continue
-        # random_color = Color(randint(0, 255), randint(0, 255), randint(0, 255), 255)
-        random_color = Color(int(intensity * 255), int(intensity * 255), int(intensity * 255), 255)
-        triangle(screen_coord[0], screen_coord[1], screen_coord[2], image, random_color, zbuffer)
-
-    image.write("output.tga")
+    # model = Model("obj/african_head.obj")
+    # image = TGAImage(width + 1, height + 1, Format.RGBA)
+    #
+    # # model.write("info.txt")
+    # zbuffer = []
+    #
+    # for i in range(0, image.width * image.height):
+    #     zbuffer.append(-sys.maxint - 1)
+    #
+    # for face in model.faces:
+    #     screen_coord = [Vector(), Vector(), Vector()]
+    #     world_coords = [Vector(), Vector(), Vector()]
+    #     for i in range(0, 3):
+    #         world_coord_vector = model.verts[int(face.get(i))]
+    #         screen_coord[i].x = int((world_coord_vector.x + 1.) * width / 2)
+    #         screen_coord[i].y = int((world_coord_vector.y + 1.) * height / 2)
+    #         world_coords[i] = world_coord_vector
+    #     n = (world_coords[2] - world_coords[0]) ^ (world_coords[1] - world_coords[0])
+    #     norm = n.normalize()
+    #     intensity = norm.mul(light_intensity_vector)
+    #     if intensity < 0:  # skip invisible triangle
+    #         continue
+    #     # random_color = Color(randint(0, 255), randint(0, 255), randint(0, 255), 255)
+    #     random_color = Color(int(intensity * 255), int(intensity * 255), int(intensity * 255), 255)
+    #     triangle(screen_coord[0], screen_coord[1], screen_coord[2], image, random_color, zbuffer)
+    #
+    # image.write("output.tga")
 
     # scene = TGAImage(width + 1, height + 1, Format.RGBA)
     # line_by_vector(Vector(20, 34), Vector(644, 400), scene, red)
