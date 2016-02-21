@@ -36,7 +36,7 @@ class TGAImage:
 
         f.write(self.__data)
         f.close()
-        print "saved"
+        print "%s   saved" % filename
 
 
     def read(self, filename):
@@ -67,8 +67,8 @@ class TGAImage:
                 self.__data[i] = byte
 
         f.close()
-        print "width = %s   height = %s  format = %s   descriptor = %s   data = %s " \
-              % (self.width, self.height, self.format, descriptor, len(self.__data))
+        print "%s   width = %s   height = %s  format = %s   descriptor = %s   data = %s " \
+              % (filename, self.width, self.height, self.format, descriptor, len(self.__data))
 
 
     def load_rle_image(self, file):

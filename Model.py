@@ -6,6 +6,7 @@ class Model:
         self.verts = []
         self.faces = []
         self.vtextures = []
+        self.ftextures = []
         self.__load()
 
     def __load(self):
@@ -22,14 +23,22 @@ class Model:
                     face.x = int(split[1].split("/")[0]) - 1    # 1 - based format
                     face.y = int(split[2].split("/")[0]) - 1
                     face.z = int(split[3].split("/")[0]) - 1
+
+                    face_texture = Vector()
+                    face_texture.x = int(split[1].split("/")[1]) - 1    # 1 - based format
+                    face_texture.y = int(split[2].split("/")[1]) - 1
+                    face_texture.z = int(split[3].split("/")[1]) - 1
+
                     self.faces.append(face)
+                    self.ftextures.append(face_texture)
                 elif split[0] == "vt":
                      texture = Vector(float(split[1]), float(split[2]), float(split[3]))
                      self.vtextures.append(texture)
                 elif split[0] == "vn":
                      a += 1
-        print "vn = ", a
-        print "verts = %s   faces = %s   normals = %s   textures = %s" % (len(self.verts), len(self.faces), a, len(self.vtextures))
+        # print "vn = ", a
+        print "%s    verts = %s   faces = %s   normals = %s   textures = %s" \
+              % (self.file, len(self.verts), len(self.faces), a, len(self.vtextures))
         f.close()
 
     def write(self, filename):
