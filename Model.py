@@ -61,6 +61,16 @@ class Model:
         idx = face[nvert].get(1)
         return Vector(int(round(self.uv[idx].x * self.__diffusemap.width)), int(round(self.uv[idx].y * self.__diffusemap.height)))
 
+    def get_norm(self, iface, nvert):
+        face = self.faces[iface]
+        idx = face[nvert].get(2)
+        return self.normals[idx]
+
+    def get_vert(self, iface, nvert):
+        face = self.faces[iface]
+        idx = face[nvert].get(0)
+        return self.verts[idx]
+
     def diffuse(self, vect):
         return self.__diffusemap.get(int(round(vect.x)), int(round(vect.y)))
 
