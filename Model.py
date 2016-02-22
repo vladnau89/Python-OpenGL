@@ -1,17 +1,19 @@
 from Vector import Vector
+from TGAImage import TGAImage
 
 class Model:
     def __init__(self, file):
         self.file = file
         self.verts = []
         self.faces = []
-        self.vtextures = []
-        self.ftextures = []
+        self.uv = []
+        self.normals = []
+        self.__diffusemap = TGAImage()
         self.__load()
+
 
     def __load(self):
         f = open(self.file, "r")
-        a = 0
         for line in f:
             split = line.split()
             if len(split) > 0:
@@ -19,27 +21,24 @@ class Model:
                     vector = Vector(float(split[1]), float(split[2]), float(split[3]))
                     self.verts.append(vector)
                 elif split[0] == "f":
-                    face = Vector()
-                    face.x = int(split[1].split("/")[0]) - 1    # 1 - based format
-                    face.y = int(split[2].split("/")[0]) - 1
-                    face.z = int(split[3].split("/")[0]) - 1
-
-                    face_texture = Vector()
-                    face_texture.x = int(split[1].split("/")[1]) - 1    # 1 - based format
-                    face_texture.y = int(split[2].split("/")[1]) - 1
-                    face_texture.z = int(split[3].split("/")[1]) - 1
-
+                    face = [Vector(), Vector(), Vector()]
+                    for i in range(0, 3):
+                        face[i].x = int(split[i + 1].split("/")[0]) - 1    # 1 - based format
+                        face[i].y = int(split[i + 1].split("/")[1]) - 1
+                        face[i].z = int(split[i + 1].split("/")[2]) - 1
                     self.faces.append(face)
-                    self.ftextures.append(face_texture)
                 elif split[0] == "vt":
                      texture = Vector(float(split[1]), float(split[2]), float(split[3]))
-                     self.vtextures.append(texture)
+                     self.uv.append(texture)
                 elif split[0] == "vn":
-                     a += 1
-        # print "vn = ", a
-        print "%s    verts = %s   faces = %s   normals = %s   textures = %s" \
-              % (self.file, len(self.verts), len(self.faces), a, len(self.vtextures))
+                     norm = Vector(float(split[1]), float(split[2]), float(split[3]))
+                     self.normals.append(norm)
+        print "%s    verts = %s   faces = %s   normals = %s   uv = %s" \
+              % (self.file, len(self.verts), len(self.faces), len(self.normals), len(self.uv))
         f.close()
+        self.__diffusemap.read(self.file.split(".")[0] + "_diffuse.tga")
+        # self.__diffusemap.flip_vertically()
+        # self.__diffusemap.write("nigga.tga")
 
     def write(self, filename):
         f = open(filename, "w")
@@ -56,4 +55,12 @@ class Model:
             f.write('vt ' + str(vt.x) + '  ' + str(vt.y) + '  ' + str(vt.z) + '\n')
         f.write("textures = %s " % (len(self.vtextures)))
         f.close()
+
+    def get_uv(self, iface, nvert):
+        face = self.faces[iface]
+        idx = face[nvert].get(1)
+        return Vector(int(round(self.uv[idx].x * self.__diffusemap.width)), int(round(self.uv[idx].y * self.__diffusemap.height)))
+
+    def diffuse(self, vect):
+        return self.__diffusemap.get(int(round(vect.x)), int(round(vect.y)))
 

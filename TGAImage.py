@@ -1,6 +1,7 @@
 #!/usr/bin/python -tt
 import struct
 from Color import Color
+import Vector
 
 class Format:
     GRAYSCALE = 1
@@ -52,7 +53,7 @@ class TGAImage:
         f.read(2)   # x_origin
         f.read(2)   # y_origin
         self.width = struct.unpack("h", f.read(2))[0]  # width
-        self.height = struct.unpack("h", f.read(2))[0]  # height
+        self.height = struct.unpack("h", f.read(2))[0] # height
 
         self.format = struct.unpack("b", f.read(1))[0] >> 3  # bits per pixel
         descriptor = struct.unpack("b", f.read(1))[0]   # image descriptor
@@ -67,9 +68,8 @@ class TGAImage:
                 self.__data[i] = byte
 
         f.close()
-        print "%s   width = %s   height = %s  format = %s   descriptor = %s   data = %s " \
-              % (filename, self.width, self.height, self.format, descriptor, len(self.__data))
-
+        print "%s   width = %s   height = %s  format = %s   data = %s " \
+              % (filename, self.width, self.height, self.format, len(self.__data))
 
     def load_rle_image(self, file):
         pixel_count = self.width * self.height
@@ -102,6 +102,8 @@ class TGAImage:
                     if current_pixel > pixel_count:
                        print "read to many pixels"
                        return False
+        # print "pixels = %s\t current = %s\t bytes = %s\t current = %s" \
+        #       % (pixel_count, current_pixel, len(self.__data), current_byte)
         return True
 
     def set(self, x, y, color):
@@ -113,6 +115,35 @@ class TGAImage:
         self.__data[index + 0] = color.b()
         self.__data[index + 1] = color.g()
         self.__data[index + 2] = color.r()
-        self.__data[index + 3] = color.a()
 
+        if self.format == Format.RGBA:
+            self.__data[index + 3] = color.a()
+
+    def get(self, x, y):
+        if x < 0 or y < 0 or x >= self.width or y >= self.height:
+            print "bad value %s  %s " % (x, y)
+            return Color()
+        else:
+            index = int((x + y * self.width) * self.format)
+
+            if index > len(self.__data):
+                print "!!! %s    %s" % (index, len(self.__data))
+
+            r = self.__data[index + 2]
+            g = self.__data[index + 1]
+            b = self.__data[index + 0]
+            a = self.__data[index + 3] if self.format == Format.RGBA else 255
+            return Color(r, g, b, a)
+
+    def flip_vertically(self):
+        bytes_per_line = self.width * self.format
+        half = self.height >> 1
+        for j in range(0, half):
+            l1 = j * bytes_per_line
+            l2 = (self.height - 1 - j) * bytes_per_line
+            line = self.__data[l1: l1 + bytes_per_line]
+            for i in range(0, bytes_per_line):
+                self.__data[l1 + i] = self.__data[l2 + i]
+            for i in range(0, bytes_per_line):
+                self.__data[l2 + i] = line[i]
 
